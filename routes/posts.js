@@ -9,11 +9,13 @@ router.route("/").get((req, res) => {
 
 router.route("/add").post((req, res) => {
   const username = req.body.username;
+  const title = req.body.title;
   const description = req.body.description;
   const date = Date.parse(req.body.date);
 
   const newPost = new Post({
     username,
+    title,
     description,
     date
   });
@@ -25,13 +27,13 @@ router.route("/add").post((req, res) => {
 });
 
 router.route("/:id").get((req, res) => {
-  Exercise.findById(req.params.id)
+  Post.findById(req.params.id)
     .then(post => res.json(post))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
 router.route("/:id").delete((req, res) => {
-  Exercise.findByIdAndDelete(req.params.id)
+  Post.findByIdAndDelete(req.params.id)
     .then(() => res.json("Post deleted"))
     .catch(err => res.status(400).json("Error: " + err));
 });
@@ -40,8 +42,8 @@ router.route("/update/:id").post((req, res) => {
   Post.findById(req.params.id)
     .then(post => {
       post.username = req.body.username;
+      post.title = req.body.title;
       post.description = req.body.description;
-      post.duration = Number(req.body.duration);
       post.date = Date.parse(req.body.date);
 
       post
