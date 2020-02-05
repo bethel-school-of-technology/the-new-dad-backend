@@ -33,7 +33,7 @@ router.route("/:id").get((req, res) => {
 });
 
 router.route("/:id").delete((req, res) => {
-  Post.findByIdAndDelete(req.params.id)
+  Blog.findByIdAndDelete(req.params.id)
     .then(() => res.json("Blog deleted"))
     .catch(err => res.status(400).json("Error: " + err));
 });
