@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+var passport = require('passport');
+var session = require('express-session');
 
 require("dotenv").config();
 
@@ -9,6 +11,10 @@ const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+
+app.use(session({ secret: 'perilous journey' }));
+app.use(passport.initialize());  
+app.use(passport.session());
 
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });

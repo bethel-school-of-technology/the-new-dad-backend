@@ -33,9 +33,8 @@ var authService = {
    return bcrypt.compareSync(plainTextPassword, hashedPassword)
  }
 }
+
 module.exports = authService;
-
-
 
 
 
