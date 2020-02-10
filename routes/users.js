@@ -2,13 +2,13 @@ const router = require("express").Router();
 let User = require("../models/user.model");
 let authService = require("../services/auth");
 
-router.route("/").get((req, res) => {
+router.get("/", function (req, res) {
   User.find()
     .then(users => res.json(users))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-router.route("/add").post((req, res) => {
+router.post("/add", function (req, res) {
   const username = req.body.username;
   const email = req.body.email;
   const password = authService.hashPassword(req.body.password);
@@ -21,7 +21,7 @@ router.route("/add").post((req, res) => {
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-router.route("/login").post((req, res) => {
+router.post("/login", function (req, res) {
   console.log(req.body);
   User.findOne({
     username: req.body.username
@@ -48,12 +48,12 @@ router.route("/login").post((req, res) => {
         res.send("Wrong password");
       }
     }
-  });
+  })
 });
 
-router.route("/logout").get((req, res, next) => {
+router.get("/logout", function (req, res) {
   res.cookie("jwt", "", { expires: new Date(0) });
-  res.redirect("/users/login");
+  res.send("Logged Out");
 });
 
 module.exports = router;
