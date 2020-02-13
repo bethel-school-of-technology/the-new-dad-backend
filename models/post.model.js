@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
+//updated//
 const postSchema = new Schema(
   {
     username: { type: String, required: true },
