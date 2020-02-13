@@ -6,14 +6,14 @@ var authService = {
  signUser: function(user) {
    const token = jwt.sign(
      {
-       Username: user.Username,
-       UserId: user.UserId
+       username: user.username
      },
      'secretkey',
      {
        expiresIn: '1h'
      }
    );
+   console.log(token);
    return token;
  },
  

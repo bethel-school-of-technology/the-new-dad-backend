@@ -1,8 +1,8 @@
 const router = require("express").Router();
+const withAuth = require('../middleware');
 let Post = require("../models/post.model");
 let authService = require("../services/auth");
-
-let authService = require("../services/auth");
+const User = require('../models/user.model')
 
 router.get("/", function(req, res) {
   Post.find()
@@ -43,39 +43,35 @@ router.delete("/:id", function(req, res) {
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-router.post("/update/:id", function(req, res) {
+router.post("/update/:id", withAuth, function(req, res) {
   Post.findById(req.params.id)
     .then(post => {
+      console.log(req.username)
+      User.findOne({
+        username: req.username
+      }).then(user => {
+        if (!user) {
+          res.status(400).json('Error: User not found!')
+          return;
+        }
       post.username = req.body.username;
       post.title = req.body.title;
       post.description = req.body.description;
       post.date = Date.parse(req.body.date);
-      post.replies = req.body.replies;
+      let replies = post.replies;
+      replies.push({ uid: user.id, username: user.username, reply: req.body.replies });
+      post.replies = replies;
+
       post
         .save()
         .then(() => res.json("Post updated!"))
         .catch(err => res.status(400).json("Error: " + err));
+      });
     })
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-router.post("/updatepost/:id", function(req, res) {
-  Post.findById(req.params.id)
-    .then(post => {
-      post.username = req.body.username;
-      post.title = req.body.title;
-      post.description = req.body.description;
-      post.date = Date.parse(req.body.date);
-      post.replies = req.body.replies;
-      post
-        .save()
-        .then(() => res.json("Post updated!"))
-        .catch(err => res.status(400).json("Error: " + err));
-    })
-    .catch(err => res.status(400).json("Error: " + err));
-});
-
-router.get("/reply", function(req, res) {
+router.get("/reply", withAuth, function(req, res) {
   let token = req.cookies.jwt;
   if (token) {
     authService.verifyUser(token)

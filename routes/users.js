@@ -38,9 +38,11 @@ router.post("/login", function (req, res) {
       );
       if (passwordMatch) {
         let token = authService.signUser(user);
+        console.log(token);
         let responseuser = {
           username: user.username
         };
+        
         res.cookie("jwt", token);
         res.json(responseuser);
       } else {
@@ -53,6 +55,7 @@ router.post("/login", function (req, res) {
 
 router.get("/logout", function (req, res) {
   res.cookie("jwt", "", { expires: new Date(0) });
+  console.log(res)
   res.send("Logged Out");
 });
 

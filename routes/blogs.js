@@ -8,13 +8,11 @@ router.get("/", function(req, res) {
 });
 
 router.post("/add", function(req, res) {
-  const username = req.body.username;
   const title = req.body.title;
   const description = req.body.description;
   const date = Date.parse(req.body.date);
 
   const newBlog = new Blog({
-    username,
     title,
     description,
     date
@@ -41,7 +39,6 @@ router.delete("/:id", function(req, res) {
 router.post("/update/:id", function(req, res) {
   Blog.findById(req.params.id)
     .then(blog => {
-      blog.username = req.body.username;
       blog.title = req.body.title;
       blog.description = req.body.description;
       blog.date = Date.parse(req.body.date);

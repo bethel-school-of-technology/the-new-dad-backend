@@ -3,6 +3,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const passport = require('passport');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const withAuth = require('./middleware');
 
 require("dotenv").config();
 
@@ -15,6 +17,12 @@ app.use(express.json());
 app.use(session({ secret: 'perilous journey' }));
 app.use(passport.initialize());  
 app.use(passport.session());
+app.use(cookieParser());
+
+app.get('/api/secret', withAuth, function(req, res) {
+  res.send('The password is potato');
+});
+
 
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });

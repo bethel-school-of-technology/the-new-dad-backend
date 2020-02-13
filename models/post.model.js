@@ -8,7 +8,11 @@ const postSchema = new Schema(
     title: { type: String, required: true },
     description: { type: String, required: true },
     date: { type: Date, required: true },
-    replies: Array
+    replies: [{
+      uid: String,
+      username: String,
+      reply: String
+    }]
   },
   {
     timestamps: true
