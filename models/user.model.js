@@ -20,12 +20,8 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
-      minlength: 6
+      minlength: 6,
     },
-    Admin: {
-      type: Boolean,
-      required: false
-    }
   },
   {
     timestamps: true
