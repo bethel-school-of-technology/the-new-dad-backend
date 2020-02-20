@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const withAuth = require('../middleware');
+// const withAuth = require('../middleware');
 let Post = require("../models/post.model");
 let authService = require("../services/auth");
 const User = require('../models/user.model')
@@ -11,14 +11,12 @@ router.get("/", function(req, res) {
 });
 
 router.post("/add", function(req, res) {
-  const username = req.body.username;
   const title = req.body.title;
   const description = req.body.description;
   const date = Date.parse(req.body.date);
   const replies = req.body.replies;
 
   const newPost = new Post({
-    username,
     title,
     description,
     date,
@@ -43,50 +41,50 @@ router.delete("/:id", function(req, res) {
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-router.post("/update/:id", withAuth, function(req, res) {
+router.post("/update/:id", function(req, res) {
   Post.findById(req.params.id)
     .then(post => {
-      console.log(req.username)
-      User.findOne({
-        username: req.username
-      }).then(user => {
-        if (!user) {
-          res.status(400).json('Error: User not found!')
-          return;
-        }
+      console.log(req.post)
+      // User.findOne({
+      //   username: req.username
+      // }).then(post => {
+      //   if (!post) {
+      //     res.status(400).json('Error: Post not found!')
+      //     return;
+      //   }
       post.username = req.body.username;
       post.title = req.body.title;
       post.description = req.body.description;
       post.date = Date.parse(req.body.date);
       let replies = post.replies;
-      replies.push({ uid: user.id, username: user.username, reply: req.body.replies });
+      replies.push({ reply: req.body.replies });
       post.replies = replies;
 
       post
         .save()
         .then(() => res.json("Post updated!"))
         .catch(err => res.status(400).json("Error: " + err));
-      });
-    })
+      })
+    // })
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-router.get("/reply", withAuth, function(req, res) {
-  let token = req.cookies.jwt;
-  if (token) {
-    authService.verifyUser(token)
-      .then(user => {
-        if (user) {
-          res.send(JSON.stringify(user));
-        } else {
-          res.status(401);
-          res.send('Invalid authentication token');
-        }
-      });
-  } else {
-    res.status(401);
-    res.send('Must be logged in');
-  }
+router.post("/reply/:id", function(req, res) {
+  Post.findById(req.params.id)
+    .then(post => {
+      console.log(req.post)
+
+      let replies = post.replies;
+      replies.push({ reply: req.body.replies });
+      post.replies = replies;
+
+      post
+        .save()
+        .then(() => res.json("Post updated!"))
+        .catch(err => res.status(400).json("Error: " + err));
+      })
+
+    .catch(err => res.status(400).json("Error: " + err));
 });
 
 module.exports = router;

@@ -19,10 +19,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieParser());
 
-app.get('/api/secret', withAuth, function(req, res) {
-  res.send('The password is potato');
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header("Access-Control-Expose-Headers", "Authorization");
+  next();
 });
-
 
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });
