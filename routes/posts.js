@@ -1,24 +1,25 @@
 const router = require("express").Router();
-// const withAuth = require('../middleware');
+const withAuth = require('../middleware');
 let Post = require("../models/post.model");
 let authService = require("../services/auth");
 const User = require('../models/user.model')
 
-router.get("/", function(req, res) {
+router.get("/", function (req, res) {
   Post.find()
     .then(posts => res.json(posts))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-router.post("/add", function(req, res) {
+router.post("/add", function (req, res) {
   const title = req.body.title;
-  const description = req.body.description;
+  const name = req.body.name;
   const date = Date.parse(req.body.date);
   const replies = req.body.replies;
+  console.log(req.username);
 
   const newPost = new Post({
     title,
-    description,
+    name,
     date,
     replies
   });
@@ -29,19 +30,19 @@ router.post("/add", function(req, res) {
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-router.get("/:id", function(req, res) {
+router.get("/:id", function (req, res) {
   Post.findById(req.params.id)
     .then(post => res.json(post))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-router.delete("/:id", function(req, res) {
+router.delete("/:id", function (req, res) {
   Post.findByIdAndDelete(req.params.id)
     .then(() => res.json("Post deleted"))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-router.post("/update/:id", function(req, res) {
+router.post("/update/:id", function (req, res) {
   Post.findById(req.params.id)
     .then(post => {
       console.log(req.post)
@@ -52,9 +53,8 @@ router.post("/update/:id", function(req, res) {
       //     res.status(400).json('Error: Post not found!')
       //     return;
       //   }
-      post.username = req.body.username;
       post.title = req.body.title;
-      post.description = req.body.description;
+      post.name = req.body.name;
       post.date = Date.parse(req.body.date);
       let replies = post.replies;
       replies.push({ reply: req.body.replies });
@@ -64,12 +64,12 @@ router.post("/update/:id", function(req, res) {
         .save()
         .then(() => res.json("Post updated!"))
         .catch(err => res.status(400).json("Error: " + err));
-      })
+    })
     // })
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-router.post("/reply/:id", function(req, res) {
+router.post("/reply/:id", function (req, res) {
   Post.findById(req.params.id)
     .then(post => {
       console.log(req.post)
@@ -82,9 +82,37 @@ router.post("/reply/:id", function(req, res) {
         .save()
         .then(() => res.json("Post updated!"))
         .catch(err => res.status(400).json("Error: " + err));
-      })
+    })
 
     .catch(err => res.status(400).json("Error: " + err));
 });
+
+// router.post("/reply/update/:id", function (req, res) {
+//   Post.findById()
+//     .then(post => {
+//       console.log("post", post);
+//       console.log("request BODY", req.body);
+//       let replies = post.replies;
+//       const reply = req.body;
+
+//       const updatedPost = new Post({
+//         replies
+//       });
+
+//       // if(replies._id === req.body._id) {
+//       //   let reply = req.body._id;
+//       //   console.log("reply", reply);
+//       //   Post.findOneAndDelete(reply);
+//       // }
+     
+
+//           post
+//             .save()
+//             .then(() => res.json("Post updated!"))
+//             .catch(err => res.status(400).json("Error: " + err));
+//         })
+
+//     .catch(err => res.status(400).json("Error: " + err));
+//   })
 
 module.exports = router;
