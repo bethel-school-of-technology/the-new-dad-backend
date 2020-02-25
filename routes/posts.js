@@ -56,9 +56,9 @@ router.post("/update/:id", function (req, res) {
       post.title = req.body.title;
       post.name = req.body.name;
       post.date = Date.parse(req.body.date);
-      let replies = post.replies;
-      replies.push({ reply: req.body.replies });
-      post.replies = replies;
+      // let replies = post.replies;
+      // replies.push({ reply: req.body.replies });
+      // post.replies = replies;
 
       post
         .save()
