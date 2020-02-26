@@ -56,9 +56,9 @@ router.post("/update/:id", function (req, res) {
       post.title = req.body.title;
       post.name = req.body.name;
       post.date = Date.parse(req.body.date);
-      let replies = post.replies;
-      replies.push({ reply: req.body.replies });
-      post.replies = replies;
+      // let replies = post.replies;
+      // replies.push({ reply: req.body.replies });
+      // post.replies = replies;
 
       post
         .save()
@@ -86,33 +86,5 @@ router.post("/reply/:id", function (req, res) {
 
     .catch(err => res.status(400).json("Error: " + err));
 });
-
-// router.post("/reply/update/:id", function (req, res) {
-//   Post.findById()
-//     .then(post => {
-//       console.log("post", post);
-//       console.log("request BODY", req.body);
-//       let replies = post.replies;
-//       const reply = req.body;
-
-//       const updatedPost = new Post({
-//         replies
-//       });
-
-//       // if(replies._id === req.body._id) {
-//       //   let reply = req.body._id;
-//       //   console.log("reply", reply);
-//       //   Post.findOneAndDelete(reply);
-//       // }
-     
-
-//           post
-//             .save()
-//             .then(() => res.json("Post updated!"))
-//             .catch(err => res.status(400).json("Error: " + err));
-//         })
-
-//     .catch(err => res.status(400).json("Error: " + err));
-//   })
 
 module.exports = router;
