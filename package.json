@@ -10,11 +10,31 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.8",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.1.0",
+    "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "mongoose": "^5.8.9",
-    "nodemon": "^2.0.2"
+    "express-session": "^1.17.0",
+    "is-empty": "^1.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.1",
+    "nodemon": "^2.0.2",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "validator": "^12.2.0"
   },
-  "description": ""
+  "description": "",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bethel-school-of-technology/the-new-dad-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bethel-school-of-technology/the-new-dad-backend/issues"
+  },
+  "homepage": "https://github.com/bethel-school-of-technology/the-new-dad-backend#readme"
 }

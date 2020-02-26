@@ -177,18 +177,19 @@ function iter(i) {
   };
 }
 
-for (const i in Collection.prototype) {
+for (const key of Object.keys(Collection.prototype)) {
   // Janky hack to work around gh-3005 until we can get rid of the mongoose
   // collection abstraction
-  try {
-    if (typeof Collection.prototype[i] !== 'function') {
-      continue;
-    }
-  } catch (e) {
+  const descriptor = Object.getOwnPropertyDescriptor(Collection.prototype, key);
+  // Skip properties with getters because they may throw errors (gh-8528)
+  if (descriptor.get !== undefined) {
+    continue;
+  }
+  if (typeof Collection.prototype[key] !== 'function') {
     continue;
   }
 
-  iter(i);
+  iter(key);
 }
 
 /**
@@ -275,7 +276,8 @@ function format(obj, sub, color) {
     return obj;
   }
 
-  let x = require('../../utils').clone(obj, {transform: false});
+  const clone = require('../../helpers/clone');
+  let x = clone(obj, {transform: false});
 
   if (x.constructor.name === 'Binary') {
     x = 'BinData(' + x.sub_type + ', "' + x.toString('base64') + '")';

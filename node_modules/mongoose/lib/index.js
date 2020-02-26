@@ -15,6 +15,7 @@ if (global.MONGOOSE_DRIVER_PATH) {
   require('./driver').set(require('./drivers/node-mongodb-native'));
 }
 
+const Document = require('./document');
 const Schema = require('./schema');
 const SchemaType = require('./schematype');
 const SchemaTypes = require('./schema/index');
@@ -24,9 +25,9 @@ const VALID_OPTIONS = require('./validoptions');
 const Types = require('./types');
 const Query = require('./query');
 const Model = require('./model');
-const Document = require('./document');
 const applyPlugins = require('./helpers/schema/applyPlugins');
 const get = require('./helpers/get');
+const promiseOrCallback = require('./helpers/promiseOrCallback');
 const legacyPluralize = require('mongoose-legacy-pluralize');
 const utils = require('./utils');
 const pkg = require('../package.json');
@@ -326,10 +327,10 @@ Mongoose.prototype.createConnection = function(uri, options, callback) {
  * @return {Promise} resolves to `this` if connection succeeded
  */
 
-Mongoose.prototype.connect = function() {
+Mongoose.prototype.connect = function(uri, options, callback) {
   const _mongoose = this instanceof Mongoose ? this : mongoose;
   const conn = _mongoose.connection;
-  return conn.openUri(arguments[0], arguments[1], arguments[2]).then(() => _mongoose);
+  return conn.openUri(uri, options, callback).then(() => _mongoose);
 };
 
 /**
@@ -343,7 +344,7 @@ Mongoose.prototype.connect = function() {
 Mongoose.prototype.disconnect = function(callback) {
   const _mongoose = this instanceof Mongoose ? this : mongoose;
 
-  return utils.promiseOrCallback(callback, cb => {
+  return promiseOrCallback(callback, cb => {
     let remaining = _mongoose.connections.length;
     if (remaining <= 0) {
       return cb(null);
@@ -1013,6 +1014,20 @@ Mongoose.prototype.Decimal128 = SchemaTypes.Decimal128;
  */
 
 Mongoose.prototype.Mixed = SchemaTypes.Mixed;
+
+/**
+ * The Mongoose Date [SchemaType](/docs/schematypes.html).
+ *
+ * ####Example:
+ *
+ *     const schema = new Schema({ test: Date });
+ *     schema.path('test') instanceof mongoose.Date; // true
+ *
+ * @property Date
+ * @api public
+ */
+
+Mongoose.prototype.Date = SchemaTypes.Date;
 
 /**
  * The Mongoose Number [SchemaType](/docs/schematypes.html). Used for
